@@ -56,5 +56,28 @@ EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
                        int *outl, const unsigned char *in, int inl);
 ```
 The key thing to know about this function is that you pass a pointer to the ciphertext chunk that I give you as in and the number of bytes I give you as inl and this function writes plaintext bytes to out and the number of bytes written to outl. Because CBC produces output one 16-byte block at a time, outl will be a multiple of 16 and may not match inl. OpenSSL will buffer any unwritten output and output it with a later call.
+
+The file server.c with the following functions will be available.
+```
+/* Call before any other server functions. Initializes encryption. */
+void server_init();
+​
+/* Call after all other server functions. Frees resources. */
+void server_close();
+​
+/* Writes 16 bytes to buf which will be used for this message's IV */
+void server_get_cbc_iv(void *buf);
+​
+/* Writes 32 bytes to buf which will be used for this message's AES-256 key */
+void server_get_key(void *buf);
+​
+/* Returns non-zero if no more data remains and zero if more data remains */
+int server_done();
+​
+/* Receive next chunk of the ciphertext. Return value is 1 to 256 and is the */
+/* number of bytes written to buf. It is an error to call this function when */
+/* server_done() is non-zero (ie, true). */
+int server_next_chunk(void *buf);
+```
 ### Assignment 
 Write a C file client.c with a main program that: calls server_init to initialize my server; calls server_get_cbc_iv and server_get_key to get the IV and key used for encryption; and then while server_done returns 0 (ie, is false) calls server_next_chunk to get the next chunk of the ciphertext.
