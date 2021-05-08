@@ -48,3 +48,13 @@ In OpenSSL's interfaces, cryptographic algorithms typically allow you to supply 
 The assignment is to implement your own version of this easy to use interface. The implementation is not allowed to call any HMAC functions and must instead implement the HMAC algorithm using the EVP Message Digests interface to do all of the cryptographic hashing.
 
 NOTE: Currently, this is program does not test the case that the HMAC key length is greater than the underlying hash function's block length. It also does not test the case where one passes NULL to the md parameter (which the documentation says would require the use of a static array). Both of these are unusual situations.
+
+## OpenSSL Decrypt
+Write OpenSSL code to decrypt a ciphertext. Code that encrypts Lewis Caroll's Jabberwocky poem using the AES-256 block cipher and CBC mode is provided. The code will encrypt the poem, break the ciphertext into chunks, and send the chunks to you one at a time.
+```
+EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
+                       int *outl, const unsigned char *in, int inl);
+```
+The key thing to know about this function is that you pass a pointer to the ciphertext chunk that I give you as in and the number of bytes I give you as inl and this function writes plaintext bytes to out and the number of bytes written to outl. Because CBC produces output one 16-byte block at a time, outl will be a multiple of 16 and may not match inl. OpenSSL will buffer any unwritten output and output it with a later call.
+### Assignment 
+Write a C file client.c with a main program that: calls server_init to initialize my server; calls server_get_cbc_iv and server_get_key to get the IV and key used for encryption; and then while server_done returns 0 (ie, is false) calls server_next_chunk to get the next chunk of the ciphertext.
