@@ -80,4 +80,6 @@ int server_done();
 int server_next_chunk(void *buf);
 ```
 ### Assignment 
-Write a C file client.c with a main program that: calls server_init to initialize my server; calls server_get_cbc_iv and server_get_key to get the IV and key used for encryption; and then while server_done returns 0 (ie, is false) calls server_next_chunk to get the next chunk of the ciphertext.
+Write a C file client.c with a main program that: 
+- calls server_init to initialize my server.
+- calls server_get_cbc_iv and server_get_key to get the IV and key used for encryption; and then while server_done returns 0 (ie, is false) calls server_next_chunk to get the next chunk of the ciphertext.
