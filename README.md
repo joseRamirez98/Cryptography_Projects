@@ -32,3 +32,19 @@ int aes128ctr_hmacsha256_siv_decrypt(unsigned char *k,       // 16 byte key
                                      unsigned char *p)       // pbytes byte plaintext
 ```                                     
 Decryption should write the AES128-CTR decryption result to p and then verify that the tag is correct for it. If authentication fails return 0 and if authentication shows the plaintext is valid, return any non-zero value.
+
+## Implementing HMAC using OpenSSL
+Not that long ago, HMAC was the most popular algorithm for generating authentication tags. It has since been overtaken by Wegman-Carter authentication, but is still embedded in many standards. In this assignment, you will get more practice using OpenSSL and learn the HMAC algorithm.
+
+### Assignment
+Implement HMAC with the following function header
+```
+ unsigned char *hmac_taggen(const EVP_MD *evp_md, const void *key,
+                            int key_len, const unsigned char *d, size_t n,
+                             unsigned char *md, unsigned int *md_len)
+```
+In OpenSSL's interfaces, cryptographic algorithms typically allow you to supply a sequence of chunks of input and then finalize the operation when the data is complete. Sometimes OpenSSL provides a simpler interface for situations where you are only going to use an algorithm once and all data is available. This interface is such an example: you supply the key and data to be authenticated and it immediately provides the authentication tag.
+
+The assignment is to implement your own version of this easy to use interface. The implementation is not allowed to call any HMAC functions and must instead implement the HMAC algorithm using the EVP Message Digests interface to do all of the cryptographic hashing.
+
+NOTE: Currently, this is program does not test the case that the HMAC key length is greater than the underlying hash function's block length. It also does not test the case where one passes NULL to the md parameter (which the documentation says would require the use of a static array). Both of these are unusual situations.
