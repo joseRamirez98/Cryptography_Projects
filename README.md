@@ -13,3 +13,22 @@ SIVEncrypt(K,N,P):
    C = AES128-CTR(K,tag,P)
    return (C,tag)
 ```
+### Assignment
+Implement the above pseudocode and its inverse using OpenSSL and the following C headers.
+```
+void aes128ctr_hmacsha256_siv_encrypt(unsigned char *k,       // 16 byte key
+                                      unsigned char *n,       // 12 byte nonce
+                                      unsigned char *p,       // pbyte bytes plaintext
+                                      int            pbytes,  // plaintext bytes
+                                      unsigned char *tag,     // 12 byte authentication tag
+                                      unsigned char *c)       // pbytes byte ciphertext
+
+// Returns 0 is authentication fails, non-zero if it succeeds
+int aes128ctr_hmacsha256_siv_decrypt(unsigned char *k,       // 16 byte key
+                                     unsigned char *n,       // 12 byte nonce
+                                     unsigned char *c,       // cbyte bytes ciphertext
+                                     int            cbytes,  // ciphertext bytes
+                                     unsigned char *tag,     // 12 byte authentication tag
+                                     unsigned char *p)       // pbytes byte plaintext
+```                                     
+Decryption should write the AES128-CTR decryption result to p and then verify that the tag is correct for it. If authentication fails return 0 and if authentication shows the plaintext is valid return any non-zero value.
